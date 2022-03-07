@@ -1,0 +1,28 @@
+---
+- hosts: localhost
+  tasks: 
+  - name: Get the university number
+    get_url:
+      url: https://data.gov.sg/dataset/249f1149-1e04-40e2-81c6-bfab3bba5574/download
+      dest: ./1.uni_number.zip
+      mode: '0600'
+  - name: Get the poly number
+    get_url:
+      url: https://data.gov.sg/dataset/f6048a81-0f7b-436c-8bfa-ebe1bb42cfdc/download
+      dest: ./2.poly_number.zip
+      mode: '0600'     
+  - name: unpack the uni number
+    ansible.builtin.unarchive:
+      src: ./1.uni_number.zip
+      dest: ./
+      remote_src: yes #please read the documentation
+  - name: unpack the poly number
+    ansible.builtin.unarchive:
+      src: ./2.poly_number.zip
+      dest: ./
+      remote_src: yes #please read the documentation
+  - name: Add both the number and save it somewhere
+    ansible.builtin.script: ./5.this_script_will_read_csv_and_process_the_data_and_save_data_somewhere.py
+    args:
+      executable: python3
+  #i am probably using panda - import panda and use Python
